@@ -451,8 +451,8 @@ const binarySearchRotated = (arr, target, idx = 0) => {
   }
 };
 
-const answers = rotatedArray.map(el => binarySearchRotated(rotatedArray, el));
-console.log(answers);
+// const answers = rotatedArray.map(el => binarySearchRotated(rotatedArray, el));
+// console.log(answers);
 
 // Find the first non-repeated character in a String
 
@@ -481,3 +481,30 @@ const findFirstNonRepeatCharacter = string => {
 
 // O(n + n)
 // console.log(findFirstNonRepeatCharacter("catepillar"));
+
+// Reverse a String iteratively and recursively
+
+const revereStringIterative = string => {
+  let reversed = "";
+  for (let i = string.length - 1; i >= 0; i--) {
+    reversed += string[i];
+  }
+  return reversed;
+};
+
+// O(n) time and space complexity
+
+// console.log(revereStringIterative("terrible"));
+
+const reverseStringRecursively = string => {
+  if (string.length <= 1) {
+    return string;
+  }
+
+  return (
+    string[string.length - 1] +
+    reverseStringRecursively(string.slice(0, string.length - 1))
+  );
+};
+
+console.log(reverseStringRecursively("terrible"));
