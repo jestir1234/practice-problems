@@ -507,4 +507,163 @@ const reverseStringRecursively = string => {
   );
 };
 
-console.log(reverseStringRecursively("terrible"));
+// console.log(reverseStringRecursively("terrible"));
+
+// Determine if 2 Strings are anagrams
+
+const areAnagrams = (string1, string2) => {
+  const letters = {}; // O(m + n) space
+
+  // If casing doesn't matters
+  string1 = string1.toUpperCase(); // O(n)
+  string2 = string2.toUpperCase(); // O(m)
+
+  for (let i = 0; i < string1.length; i++) {
+    if (letters[string1[i]] === " ") {
+      continue;
+    }
+    if (letters[string1[i]]) {
+      letters[string1[i]] += 1;
+    } else {
+      letters[string1[i]] = 1;
+    }
+  }
+
+  for (let i = 0; i < string2.length; i++) {
+    if (letters[string2[i]] === " ") {
+      continue;
+    }
+    if (letters[string2[i]]) {
+      letters[string2[i]] -= 1;
+    }
+  }
+
+  return Object.values(letters).reduce((acc, v) => acc + v) === 0;
+};
+
+// O(n + m) time complexity
+
+// console.log(areAnagrams("arbok", "kobra"));
+// console.log(areAnagrams("Customer", "store scum"));
+
+const areAnagramsBytes = (string1, string2) => {
+  // If casing doesn't matter
+  string1 = string1.toLowerCase(); // O(n)
+  string2 = string2.toLowerCase(); // O(m)
+
+  let total = 0;
+  let longerString = string1.length > string2.length ? string1 : string2;
+
+  for (let i = 0; i < longerString; i++) {
+    if (string1[i] !== " ") {
+      total += string1[i].charCodeAt(0);
+    }
+
+    if (string2[i] !== " ") {
+      total -= string2[i].charCodeAt(0);
+    }
+    console.log(total);
+  }
+
+  return total === 0;
+};
+
+// console.log(areAnagramsBytes("arbok", "kobra"));
+// console.log(areAnagramsBytes("Customer", "store scum"));
+
+// Check if String is a palindrome
+// if the string length is odd then stop at the mid point
+// if the string length is even then continue to the mid point
+
+const isPalindrome = string => {
+  string = string.toLowerCase(); // O(n) time/space
+  string = string.replace(" ", ""); // O(n) time/space
+  const isOdd = string.length % 2 !== 0; // O(1) space
+
+  const mid = Math.floor(string.length - 1 / 2); // O(1) space
+  for (let i = 0; i <= mid; i++) {
+    // O(n / 2) time
+    if (isOdd) {
+      if (i === mid) break;
+    }
+    if (string[i] !== string[string.length - 1 - i]) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// console.log(isPalindrome("A but tuba"));
+
+const isPalindromeImproved = string => {
+  if (string.length < 2) {
+    return false;
+  }
+
+  string = string.toLowerCase(); // O(n) time and space
+
+  let rightIdx = string.length - 1; // O(1)
+  let leftIdx = 0; // O(1)
+  let endLoop = false; // O(1)
+  let isPalindrome = true; // O(1)
+
+  while (leftIdx < rightIdx && !endLoop) {
+    leftIdx = findIdxForNextChar(string, leftIdx, rightIdx, idx => (idx += 1)); // O(m - n || n - m) time
+    rightIdx = findIdxForNextChar(string, rightIdx, leftIdx, idx => (idx -= 1)); // O(m - n || n - m) time
+    // console.log("leftIdx = ", leftIdx);
+    // console.log("rightIdx = ", rightIdx);
+    // console.log(
+    //   `leftChar ${string[leftIdx]} is equal to rightChar ${string[rightIdx]}. `,
+    //   string[leftIdx] === string[rightIdx]
+    // );
+    if (string[leftIdx] !== string[rightIdx]) {
+      endLoop = true; // O(1);
+      isPalindrome = false; // O(1);
+    }
+    leftIdx += 1;
+    rightIdx -= 1;
+  }
+  return isPalindrome;
+};
+
+const illegalChars = [
+  " ",
+  "!",
+  "?",
+  "'",
+  ",",
+  "“",
+  "”",
+  ")",
+  "(",
+  ";",
+  ":",
+  "-",
+  ".",
+  "’"
+]; // O(1) space
+
+const findIdxForNextChar = (string, targetIdx, limitIdx, increment) => {
+  let reachedEnd = false; // O(1);
+  while (illegalChars.includes(string[targetIdx]) && !reachedEnd) {
+    targetIdx = increment(targetIdx); // O(1)
+    if (targetIdx === limitIdx) {
+      reachedEnd = true;
+    }
+  }
+  return targetIdx;
+};
+
+// console.log(isPalindromeImproved("A but tuba"));
+// console.log(isPalindromeImproved("A car, a man, a maraca"));
+// console.log(isPalindromeImproved("A dog, a plan, a canal: pagoda"));
+// console.log(
+//   isPalindromeImproved(
+//     "A man, a plan, a cat, a ham, a yak, a yam, a hat, a canal-Panama!"
+//   )
+// );
+console.log(
+  isPalindromeImproved(
+    "Are we not pure? “No sir!” Panama’s moody Noriega brags. “It is garbage!” Irony dooms a man; a prisoner up to new era"
+  )
+);
