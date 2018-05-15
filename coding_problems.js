@@ -662,8 +662,44 @@ const findIdxForNextChar = (string, targetIdx, limitIdx, increment) => {
 //     "A man, a plan, a cat, a ham, a yak, a yam, a hat, a canal-Panama!"
 //   )
 // );
-console.log(
-  isPalindromeImproved(
-    "Are we not pure? “No sir!” Panama’s moody Noriega brags. “It is garbage!” Irony dooms a man; a prisoner up to new era"
-  )
-);
+// console.log(
+//   isPalindromeImproved(
+//     "Are we not pure? “No sir!” Panama’s moody Noriega brags. “It is garbage!” Irony dooms a man; a prisoner up to new era"
+//   )
+// );
+
+// Check if a String is composed of all unique characters
+
+const uniqString = string => {
+  stringHash = {}; // O(n) space
+
+  // O(n) time
+  let result = true;
+  for (let i = 0; i < string.length; i++) {
+    if (stringHash[string[i]]) {
+      result = false;
+      break;
+    } else {
+      stringHash[string[i]] = true;
+    }
+  }
+  return result;
+};
+
+// console.log(uniqString("dogcaljf"));
+
+const intOrDouble = string => {
+  if (isNaN(string)) {
+    return "NaN";
+  }
+
+  if (Number.isInteger(Number(string))) {
+    return "Int";
+  }
+
+  return "Double";
+};
+// console.log(intOrDouble("sdfdsf"));
+// console.log(intOrDouble("3434"));
+// console.log(intOrDouble("3434.34335"));
+// console.log(intOrDouble("3434.34.335"));
