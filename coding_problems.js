@@ -703,3 +703,26 @@ const intOrDouble = string => {
 // console.log(intOrDouble("3434"));
 // console.log(intOrDouble("3434.34335"));
 // console.log(intOrDouble("3434.34.335"));
+
+// Find the shortest palindrome in a String
+
+const shortestSubstringPalindrome = string => {
+  let shortest;
+
+  let substringHash = {};
+
+  for (let i = 0; i < string.length; i++) {
+    for (let j = i + 1; j <= string.length; j++) {
+      let currentSubstring = string.slice(i, j);
+      if (!substringHash[currentSubstring]) {
+        if (isPalindromeImproved(currentSubstring)) {
+          substringHash[currentSubstring] = currentSubstring.length;
+        }
+      }
+    }
+  }
+
+  return Math.min(...Object.values(substringHash));
+};
+
+console.log(shortestSubstringPalindrome("racecar"));
