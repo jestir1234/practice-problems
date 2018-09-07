@@ -725,4 +725,233 @@ const shortestSubstringPalindrome = string => {
   return Math.min(...Object.values(substringHash));
 };
 
-console.log(shortestSubstringPalindrome("racecar"));
+// console.log(shortestSubstringPalindrome("racecar"));
+
+// Print all permutations of a String
+
+const findPermutations = string => {
+  if (string.length === 2) {
+    return [string[1] + string[0], string[0] + string[1]];
+  }
+
+  if (string.length <= 1) {
+    return [string[0]];
+  }
+
+  let permutations = [];
+  for (let i = 0; i < string.length; i++) {
+    let slicedChar = string[i];
+    let modString = string.slice(0, i) + string.slice(i + 1);
+    permutations = permutations.concat(
+      findPermutations(modString).map(perm => slicedChar + perm)
+    );
+  }
+  return permutations;
+};
+
+// O(n!) factorial time complexity
+// console.log(findPermutations("cats"));
+
+// Find first N primes
+
+const findFirstNPrimes = n => {
+  let primes = [];
+  let num = 2;
+  while (primes.length < n) {
+    if (num % 2 !== 0) {
+      let isPrime = true;
+      for (let i = 2; i < num; i++) {
+        if (num % i === 0) {
+          isPrime = false;
+        }
+      }
+      isPrime && primes.push(num);
+    }
+    num += 1;
+  }
+  return primes;
+};
+
+// console.log(findFirstNPrimes(5));
+
+// Use dynamic programming to find the first X prime numbers
+
+const dynamicPrimes = n => {
+  let primes = [];
+  let numHash = {};
+
+  for (let i = 2; primes.length < n; i++) {
+    if (i === 2 || i === 3 || i === 5) {
+      primes.push(i);
+      numHash[i] = true;
+    }
+
+    if (!numHash[i] && i % 2 !== 0 && i % 3 !== 0) {
+      primes.push(i);
+      for (let j = i; j <= i * i; j += i) {
+        if (!numHash[j] && j % 2 !== 0 && j % 3 !== 0) {
+          numHash[j] = true;
+        }
+      }
+      if (primes.length === n) {
+        break;
+      }
+    }
+  }
+  return primes;
+};
+
+// console.log(dynamicPrimes(15));
+
+// Write a function that prints out the binary form of an int
+
+// 128 64 32 16 8 4 2 1
+// 0   0   0  0 0 0 0 0
+const binaryOfInt = int => {
+  let highestBit = 1;
+  let previousHighestBit = 1;
+  let iterations = 0;
+  while (int > highestBit) {
+    previousHighestBit = highestBit;
+    highestBit = highestBit * 2;
+    iterations += 1;
+  }
+  let bitCount = findByteSize(iterations);
+  let bits = findOtherBits(highestBit, int);
+  let leadingZeroes = bitCount - bits.length;
+  return new Array(leadingZeroes).fill(0, 0, leadingZeroes).concat(bits);
+};
+
+const findByteSize = iterations => {
+  let bitCount = 8;
+
+  if (iterations < bitCount) {
+    return bitCount;
+  }
+
+  while (iterations > bitCount) {
+    bitCount *= 2;
+  }
+
+  return bitCount;
+};
+
+const findOtherBits = (previousHighestBit, int) => {
+  let otherBits = [];
+  let total = previousHighestBit;
+  let nextBit = previousHighestBit;
+  let iterating = true;
+  if (total === int) {
+    otherBits.push(1);
+  }
+  console.log(previousHighestBit, int);
+  while (nextBit >= 1 && iterating) {
+    nextBit /= 2;
+    console.log("currentTotal", total);
+    console.log("nextBit + total", nextBit + total);
+    if (nextBit + total > int) {
+      otherBits.push(0);
+    } else {
+      total += nextBit;
+      otherBits.push(1);
+    }
+    if (nextBit === 1) {
+      iterating = false;
+    }
+  }
+  console.log("otherbits", otherBits);
+  return otherBits;
+};
+// console.log(binaryOfInt(8));
+
+const maxLength = (a, k) => {
+  let maxLength = 0;
+  for (let i = 0; i < a.length; i++) {
+    for (let j = i + 1; j <= a.length; j++) {
+      if (i !== j) {
+        let subArray = a.slice(i, j);
+        if (Math.max(subArray) > k) {
+          continue;
+        }
+        let sum = subArray.reduce((a, b) => a + b);
+        if (sum <= k) {
+          if (subArray.length > maxLength) {
+            maxLength = subArray.length;
+          }
+        }
+      }
+    }
+  }
+  return maxLength;
+};
+let array = [1, 2, 3];
+// console.log(maxLength(array, 3));
+
+const totalSprints = (n, sprints) => {
+  let markers = {};
+  for (let j = 0; j < sprints.length - 1; j++) {
+    let startMarker = sprints[j];
+    let nextMarker = sprints[j + 1];
+    for (
+      let z = Math.min(startMarker, nextMarker);
+      z <= Math.max(startMarker, nextMarker);
+      z++
+    ) {
+      if (markers[z]) {
+        markers[z] += 1;
+      } else {
+        markers[z] = 1;
+      }
+    }
+  }
+  let max = 0;
+  let maxMarker;
+  Object.keys(markers).forEach(key => {
+    if (markers[key] > max) {
+      maxMarker = key;
+      max = markers[key];
+    }
+  });
+
+  return maxMarker;
+};
+
+const totalSprintsImproved = (n, sprints) => {
+  let rangeCounts = [];
+  let markerCounts = {};
+  let maxN = 0;
+  let maxMarker;
+  for (let i = 0; i < sprints.length - 1; i++) {
+    let startMarker = sprints[i];
+    let nextMarker = sprints[i + 1];
+    let min = Math.min(startMarker, nextMarker);
+    let max = Math.max(startMarker, nextMarker);
+    rangeCounts.push([min, max]);
+  }
+  for (let j = 0; j <= n; j++) {
+    for (let z = 0; z < rangeCounts.length; z++) {
+      if (
+        j >= Math.min(...rangeCounts[z]) &&
+        j <= Math.max(...rangeCounts[z])
+      ) {
+        if (markerCounts[j]) {
+          markerCounts[j] += 1;
+        } else {
+          markerCounts[j] = 1;
+        }
+        if (markerCounts[j] > maxN) {
+          maxN = markerCounts[j];
+          maxMarker = j;
+        }
+      }
+    }
+  }
+
+  return maxMarker;
+};
+
+const sprintTest1 = [9, 7, 3, 1];
+const sprintTest2 = [10, 8, 5, 9, 1];
+
+// console.log(totalSprints(5, sprintTest1));
+console.log(totalSprintsImproved(10, sprintTest1));
